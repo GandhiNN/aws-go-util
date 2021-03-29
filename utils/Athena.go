@@ -47,7 +47,7 @@ func WriteAthenaToCSV(rs []Rows, fname string) error {
 	// Create a file object for the writer object to flush the buffer
 	fpath := fmt.Sprintf("./result/%s", fname)
 	f, err := os.Create(fpath)
-	fmt.Printf("Writing Athena result set to %s\n", fpath)
+	log.Printf("Writing Athena result set to %s\n", fpath)
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func WriteAthenaToCSV(rs []Rows, fname string) error {
 			return err
 		}
 	}
-	fmt.Println("Done writing CSV file!")
+	log.Println("Done writing CSV file!")
 	return nil
 }
 
@@ -105,7 +105,7 @@ func SetupAthenaContext(query string, dbName string, bucketName string, svc *ath
 	if err != nil {
 		log.Fatal("Cannot start an Athena query context : ", err)
 	}
-	fmt.Printf("StartQueryExecution result with query ID: %s\n", *result.QueryExecutionId)
+	log.Printf("StartQueryExecution result with query ID: %s\n", *result.QueryExecutionId)
 
 	var qri athena.GetQueryExecutionInput
 	qri.SetQueryExecutionId(*result.QueryExecutionId)
@@ -126,13 +126,13 @@ func InvokeAthenaQuery(svc *athena.Athena, res *athena.StartQueryExecutionOutput
 			return nil, err
 		}
 		if *qrop.QueryExecution.Status.State == "RUNNING" {
-			fmt.Println("Waiting...Query Status = ", *qrop.QueryExecution.Status.State)
+			log.Println("Waiting...Query Status = ", *qrop.QueryExecution.Status.State)
 			time.Sleep(waitDuration)
 		} else if *qrop.QueryExecution.Status.State == "QUEUED" {
-			fmt.Println("Waiting...Query Status = ", *qrop.QueryExecution.Status.State)
+			log.Println("Waiting...Query Status = ", *qrop.QueryExecution.Status.State)
 			time.Sleep(waitDuration)
 		} else if *qrop.QueryExecution.Status.State == "SUCCEEDED" {
-			fmt.Println("Query exits with status = ", *qrop.QueryExecution.Status.State)
+			log.Println("Query exits with status = ", *qrop.QueryExecution.Status.State)
 			var ip athena.GetQueryResultsInput
 			ip.SetQueryExecutionId(*res.QueryExecutionId)
 
@@ -143,7 +143,7 @@ func InvokeAthenaQuery(svc *athena.Athena, res *athena.StartQueryExecutionOutput
 			rc = ParseAthenaOutput(op)
 			return rc, nil
 		} else {
-			fmt.Println("Query status is : ", *qrop.QueryExecution.Status.State)
+			log.Println("Query status is : ", *qrop.QueryExecution.Status.State)
 			time.Sleep(waitDuration)
 		}
 	}
