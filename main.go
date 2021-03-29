@@ -18,11 +18,11 @@ func main() {
 	var output string
 	var ddbPrefix string
 
-	flag.StringVar(&env, "env", "dev", "enterprise landing environment")
-	flag.StringVar(&svc, "svc", "", "AWS service to be used")
-	flag.StringVar(&tables, "tables", "", "path to list of tables")
-	flag.StringVar(&ddbPrefix, "ddbPrefix", "", "prefix for item in DDB tables")
-	flag.StringVar(&output, "output", "", "path to save the result")
+	flag.StringVar(&env, "env", "dev", "Environment (dev|qa|prd)")
+	flag.StringVar(&svc, "svc", "", "AWS service to be used (athena|ddb)")
+	flag.StringVar(&tables, "tables", "", "Path to list of tables to be queried, relative to ./config (tables.csv)")
+	flag.StringVar(&ddbPrefix, "ddbPrefix", "", "Prefix for item in DDB tables")
+	flag.StringVar(&output, "output", "", "Path to save the query result, relative to ./result (results.csv)")
 
 	flag.Parse()
 
@@ -49,13 +49,13 @@ func main() {
 		log.Println("Done running validation!")
 	} else if svc == "ddb" {
 		log.Println("Running DDB-based Validation...")
-		runDDB(awsRegion, ddbTable, filepath, output, "pipe-el-plmodm3")
+		runDDB(awsRegion, ddbTable, filepath, output, ddbPrefix)
 		log.Println("Done running validation!")
 	}
 }
 
 // runDDB is a private function run DDB related tasks
-func runDDB(region string, ddbTable string, tpath string, fout string, ingNamePrefix string) {
+func runDDB(region string, ddbTable string, tpath string, fout string, ddbPrefix string) {
 
 	// Create session object to be used
 	ddbSvc := utils.CreateDDBSession(region)
@@ -65,7 +65,7 @@ func runDDB(region string, ddbTable string, tpath string, fout string, ingNamePr
 
 	var listOfIngName []string
 	for _, i := range listOfTables {
-		ingName := fmt.Sprintf("%s_%s", ingNamePrefix, i)
+		ingName := fmt.Sprintf("%s_%s", ddbPrefix, i)
 		listOfIngName = append(listOfIngName, ingName)
 	}
 	tNow := utils.GetTimeNowEpoch()
