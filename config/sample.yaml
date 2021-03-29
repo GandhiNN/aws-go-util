@@ -1,0 +1,19 @@
+aws:
+  region: "ap-southeast-1"
+  athena:
+    dev:
+      database: "devdb"
+      outputBucket: "s3://devdb-bucket-output/"
+    qa:
+      database: "qadb"
+      outputBucket: "s3://qadb-bucket-output/"
+    prd:
+      database: "prddb"
+      outputBucket: "s3://prddb-bucket-output/"
+  ddb:
+    dev:
+      table: "dev-ddb"
+    qa:
+      table: "qa-ddb"
+    prd:
+      table: "prd-ddb"
