@@ -19,10 +19,10 @@ func main() {
 	var ddbPrefix string
 
 	flag.StringVar(&env, "env", "dev", "Environment (dev|qa|prd)")
-	flag.StringVar(&svc, "svc", "", "AWS service to be used (athena|ddb)")
-	flag.StringVar(&tables, "tables", "", "Path to list of tables to be queried, relative to ./config (tables.csv)")
-	flag.StringVar(&ddbPrefix, "ddbPrefix", "", "Prefix for item in DDB tables")
-	flag.StringVar(&output, "output", "", "Path to save the query result, relative to ./result (results.csv)")
+	flag.StringVar(&svc, "svc", "athena", "AWS service to be used (athena|ddb)")
+	flag.StringVar(&tables, "tables", "tables.csv", "Path to list of tables to be queried, relative to `./config`")
+	flag.StringVar(&ddbPrefix, "ddbPrefix", "pipe-", "Prefix for item in DDB tables")
+	flag.StringVar(&output, "output", "results.csv", "Path to save the query result, relative to `./result`")
 
 	flag.Parse()
 
