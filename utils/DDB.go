@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/csv"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
@@ -77,7 +78,7 @@ func WriteDDBToCSV(res []*dynamodb.QueryOutput, fname string) error {
 	// Create a file object for the writer object to flush the buffer
 	fpath := fmt.Sprintf("./result/%s", fname)
 	f, err := os.Create(fpath)
-	fmt.Printf("Writing DDB result set to %s\n", fpath)
+	log.Printf("Writing DDB result set to %s\n", fpath)
 	if err != nil {
 		return err
 	}
